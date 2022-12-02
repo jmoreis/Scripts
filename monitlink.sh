@@ -1,6 +1,5 @@
 #!/bin/bash
 # Criado sinalização de Gateway padrao.
-# Por Julio Reis em 01/12/2022
 
 #Variaveis globais
 wan1="8.8.4.4" #Default(DNS2 Google)
@@ -14,12 +13,12 @@ versao=`echo "${linha: -10}"|cut -d"." -f1|cut -d"v" -f2`
 #Inicio
 clear 
 echo 
-echo "`tput rev;tput bold;tput setaf 6` Monitoramento de links - TI LR (v.$versao)`tput sgr0`"
+echo "`tput rev;tput bold;tput setaf 6` Monitoramento de links (v.$versao)`tput sgr0`"
 while [ -z $opc ]
 do
     if [ `ip route|grep default|awk '{print $3}'` = "10.0.0.1" ]
     then
-        DF_RTN="Starlink   "
+        DF_RTN="Default    "
     else
         DF_RTN="Contigencia"
     fi
@@ -51,7 +50,7 @@ do
         #Define o nome do link testado
         if [ $pass_link -eq 0 ]
         then
-            nom_link="Starlink   "
+            nom_link="Default    "
         else
             nom_link="Contigencia"
         fi

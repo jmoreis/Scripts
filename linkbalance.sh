@@ -1,6 +1,5 @@
 #!/bin/bash
-# Ver. 1.0: Script para detetecao de queda do link padrao.
-# Por Julio Reis Em 01/12/2022
+# Ver. 1.0: Script para detecao de queda do link padrao.
 
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin
 
@@ -8,8 +7,8 @@ wan1="8.8.4.4" #DNS2 Google
 versao=`echo "${linha: -10}"|cut -d"." -f1|cut -d"v" -f2`
 ctd_ver=0
 CTRL=0
-CAMLCK="/scripts/net/fonte_linkbalance"
-CAMLOG="/var/log/LR"
+CAMLCK="/tmp"
+CAMLOG="/var/log"
 
 testLink()
 {
@@ -34,9 +33,8 @@ testLink
 if [ $ctd_ver -le 7 ]
 then
     touch $CAMLCK/lblc.lck
-    echo -e "Link com alta perda de pacotes ($ctd_ver).\nIniciado protocolo de contingencia.\n\nSuporte LR"| mail -s "LR09 - Starlink" julio@lr.com.br
     echo "`date "+%F %T"` : Alteração para Contingencia. Perda de pacotes=$((10-ctd)).(Ver.$versao)" >> $CAMLOG/linkbalance.log
-    #REMOVE ROTAS STARLINK
+    #REMOVE ROTAS LINK DEFAULT
     route del default gw 10.0.0.1
     sleep 2
     route add default gw 10.0.0.9
@@ -54,6 +52,6 @@ then
     route del default gw 10.0.0.9
     sleep 2
     route add default gw 10.0.0.1
-    echo "`date "+%F %T"` : Retorno link Starlink. Perda de pacotes=$((10-ctd_ver)).(Ver.$versao)" >> $CAMLOG/linkbalance.log
+    echo "`date "+%F %T"` : Retorno link Default. Perda de pacotes=$((10-ctd_ver)).(Ver.$versao)" >> $CAMLOG/linkbalance.log
     rm -f $CAMLCK/lblc.lck
 fi
