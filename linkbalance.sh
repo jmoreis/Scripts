@@ -4,7 +4,7 @@
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin
 
 wan1="8.8.4.4" #DNS2 Google
-versao=`echo "${linha: -10}"|cut -d"." -f1|cut -d"v" -f2`
+versao=`ls -l $0|awk '{ sub(/.*_v/,""); sub(/.sh*/,""); print }'|tr _ .`
 ctd_ver=0
 CTRL=0
 CAMLCK="/tmp"
@@ -33,7 +33,7 @@ testLink
 if [ $ctd_ver -le 7 ]
 then
     touch $CAMLCK/lblc.lck
-    echo "`date "+%F %T"` : Alteração para Contingencia. Perda de pacotes=$((10-ctd)).(Ver.$versao)" >> $CAMLOG/linkbalance.log
+    echo "`date "+%F %T"` : Alteração para Contingencia. Perda de pacotes=$((10-ctd)).(V:$versao)" >> $CAMLOG/linkbalance.log
     #REMOVE ROTAS LINK DEFAULT
     route del default gw 10.0.0.1
     sleep 2
@@ -52,6 +52,6 @@ then
     route del default gw 10.0.0.9
     sleep 2
     route add default gw 10.0.0.1
-    echo "`date "+%F %T"` : Retorno link Default. Perda de pacotes=$((10-ctd_ver)).(Ver.$versao)" >> $CAMLOG/linkbalance.log
+    echo "`date "+%F %T"` : Retorno link Default. Perda de pacotes=$((10-ctd_ver)).(V:$versao)" >> $CAMLOG/linkbalance.log
     rm -f $CAMLCK/lblc.lck
 fi
